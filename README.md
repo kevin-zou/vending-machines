@@ -38,4 +38,3 @@ Overall this was a very fun project to make, and one that I wish I had started e
 - Highlight map markers when corresponding card in sidebar is hovered
 - Open marker popup when corresponding card in sidebar is selected
 - Make mobile friendly
-- Host the images somewhere else for better loading times
