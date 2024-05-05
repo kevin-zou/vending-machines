@@ -1,21 +1,32 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Marker, MapContainer, Popup, TileLayer, useMap } from 'react-leaflet';
 import { Map } from 'leaflet';
 import VMCard from './VMCard';
 
 import './App.css';
-import { vendingMachines } from './constants';
+import { getVendingMachines } from './firebase';
+import { VendingMachine } from './types';
 
 function App() {
   const [leaflet, setLeaflet] = useState<Map>();
+  const [vendingMachines, setVendingMachines] = useState<VendingMachine[]>([]);
+
+  useEffect(() => {
+    async function awaitVendingMachines() {
+      const vendingMachines = await getVendingMachines();
+      vendingMachines.sort((a, b) => a.date.seconds - b.date.seconds);
+      setVendingMachines(vendingMachines);
+    }
+    awaitVendingMachines();
+  }, []);
 
   function Markers(): ReactNode {
     return vendingMachines.map((vm) => {
       return (
-        <Marker position={vm.coords}>
+        <Marker key={vm.id} position={vm.coords}>
           <Popup>
             <img src={vm.imageSrc} height='100px' />
-            <div>{vm.locationText}</div>
+            <div>{vm.name}</div>
           </Popup>
         </Marker>
       )
@@ -26,6 +37,7 @@ function App() {
     return vendingMachines.map((vm) => {
       return (
         <VMCard
+          key={vm.id}
           vendingMachine={vm}
           goTo={() => {
             if (leaflet) {
@@ -55,19 +67,21 @@ function App() {
           <p>every unique vending machine I came across in Japan, mapped</p>
         </div>
       </div>
-      <div className='container'>
-        <div className='sidebar'>
-          <VMCards />
+      {vendingMachines.length &&
+        <div className='container'>
+          <div className='sidebar'>
+            <VMCards />
+          </div>
+          <MapContainer center={vendingMachines[0].coords} zoom={13}>
+            <MapInitializer />
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            />
+            <Markers />
+          </MapContainer>
         </div>
-        <MapContainer center={vendingMachines[0].coords} zoom={13}>
-          <MapInitializer />
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          />
-          <Markers />
-        </MapContainer>
-      </div>
+      }
       <div className='footer'>
         <div>
           <a

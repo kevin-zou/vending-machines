@@ -1,7 +1,13 @@
+import { Timestamp } from 'firebase/firestore';
+
 interface VendingMachine {
-  coords: [number, number],
-  date: Date,
+  id: string,
+  coords: {
+    lat: number,
+    lng: number,
+  },
+  date: Timestamp,
   imageSrc: string,
-  locationText: string,
-  notes: string,
+  name: string,
+  desc: string,
 }

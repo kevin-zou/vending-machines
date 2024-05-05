@@ -1,3 +1,4 @@
+import { VendingMachine } from './types';
 import './VMCard.css';
 
 type VMCardProps = {
@@ -6,13 +7,13 @@ type VMCardProps = {
 }
 
 export default function VMCard(props: VMCardProps) {
-  const { imageSrc, locationText, notes } = props.vendingMachine;
+  const { imageSrc, name, desc } = props.vendingMachine;
 
   return (
     <div className='card' onClick={props.goTo}>
       <img src={imageSrc} height='200px' />
-      <h2>{locationText}</h2>
-      <p>{notes}</p>
+      <h2>{name}</h2>
+      <p>{desc}</p>
     </div>
   )
 }
