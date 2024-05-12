@@ -85,7 +85,7 @@ function App() {
       <div className='footer'>
         <div>
           <a
-            href='https://github.com/kevin-zou/project-a-week/tree/main/04_vending_machines'
+            href='https://github.com/kevin-zou/vending-machines'
             target='_blank'
           >
             source code
